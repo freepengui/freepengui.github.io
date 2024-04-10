@@ -2,17 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://freepengui.github.io/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2024-04-10T19:56:44+08:00</lastmod>
   </url><url>
-    <loc>https://freepengui.github.io/post/</loc>
+    <loc>http://localhost:1313/post/leetcode_stocks/</loc>
     <lastmod>2024-04-10T19:56:44+08:00</lastmod>
   </url><url>
-    <loc>https://freepengui.github.io/readme/</loc>
+    <loc>http://localhost:1313/post/</loc>
+    <lastmod>2024-04-10T19:56:44+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/latex_test/</loc>
+    <lastmod>2024-04-09T22:26:41+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/tcp_socket_instance/</loc>
+    <lastmod>2024-04-10T16:55:11+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/linux_directories/</loc>
+    <lastmod>2024-04-10T09:40:56+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/readme/</loc>
     <lastmod>2024-04-09T18:04:31+08:00</lastmod>
   </url><url>
-    <loc>https://freepengui.github.io/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
   </url><url>
-    <loc>https://freepengui.github.io/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
   </url>
 </urlset>
