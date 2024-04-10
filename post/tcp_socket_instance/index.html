@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='http://localhost:1313/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='http://localhost:1313/css/frameworks.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github-style.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/light.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/dark.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/syntax.css' />
+    <title>TCP Socket 网络编程实例 - freepengui&#39;s Blog</title>
+    
+    <link rel="icon" type="image/x-icon" href='http://localhost:1313/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    <meta name="description"
+  content="linux: Socket 网络框架与编程示例 Socket 网络编程框架 Socket(套接字)是一个网络编程概念，描述了一个通信端点（Endpoint），用于建立网络连接（Connection）并传输数据。
+Linux Kernel 提供了一套面向 Socket 的网络编程框架，并通过提供一组标准的 System call APIs，使得开发者可以在 Userspace 中便捷的开发各种 Network Applications，例如：基于 HTTP 协议的 Web 服务器、基于 SMTP 协议的邮件服务器、基于 FTP 协议的文件服务器等等。
+" />
+<meta name="keywords"
+  content='blog, google analytics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="http://localhost:1313/post/tcp_socket_instance/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="TCP Socket 网络编程实例 - freepengui&#39;s Blog" />
+<meta name="twitter:description"
+  content="linux: Socket 网络框架与编程示例 Socket 网络编程框架 Socket(套接字)是一个网络编程概念，描述了一个通信端点（Endpoint），用于建立网络连接（Connection）并传输数据。
+Linux Kernel 提供了一套面向 Socket 的网络编程框架，并通过提供一组标准的 System call APIs，使得开发者可以在 Userspace 中便捷的开发各种 Network Applications，例如：基于 HTTP 协议的 Web 服务器、基于 SMTP 协议的邮件服务器、基于 FTP 协议的文件服务器等等。
+" />
+<meta name="twitter:site" content="http://localhost:1313/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="http://localhost:1313/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="TCP Socket 网络编程实例 - freepengui&#39;s Blog">
+<meta property="og:description"
+  content="linux: Socket 网络框架与编程示例 Socket 网络编程框架 Socket(套接字)是一个网络编程概念，描述了一个通信端点（Endpoint），用于建立网络连接（Connection）并传输数据。
+Linux Kernel 提供了一套面向 Socket 的网络编程框架，并通过提供一组标准的 System call APIs，使得开发者可以在 Userspace 中便捷的开发各种 Network Applications，例如：基于 HTTP 协议的 Web 服务器、基于 SMTP 协议的邮件服务器、基于 FTP 协议的文件服务器等等。
+" />
+<meta property="og:url" content="http://localhost:1313/post/tcp_socket_instance/" />
+<meta property="og:site_name" content="TCP Socket 网络编程实例" />
+<meta property="og:image"
+  content="http://localhost:1313/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2024-04-09 20:53:51 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="http://localhost:1313/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <img height="24" class="octicon octicon-three-bars" width="24" src="">
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:http://localhost:1313/">
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="http://localhost:1313/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  
+<div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="http://localhost:1313/">
+                  <img class=" avatar-user"
+                    src="http://localhost:1313/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="http://localhost:1313/">freepengui</a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="http://localhost:1313/post/tcp_socket_instance/">TCP Socket 网络编程实例</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Tue, 09 Apr 2024 20:53:51 &#43;0800"
+                    class="no-wrap">
+                    Tue, 09 Apr 2024 20:53:51 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Tue, 09 Apr 2024 21:02:55 &#43;0800"
+                    class="no-wrap">
+                    Tue, 09 Apr 2024 21:02:55 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      7313 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h2 id="linux-socket-网络框架与编程示例">linux: Socket 网络框架与编程示例</h2>
+<h3 id="socket-网络编程框架">Socket 网络编程框架</h3>
+<p>Socket(套接字)是一个网络编程概念，描述了一个通信端点（Endpoint），用于建立网络连接（Connection）并传输数据。</p>
+<p><strong>Linux Kernel</strong> 提供了一套面向 Socket 的网络编程框架，并通过提供一组标准的 <strong>System call APIs</strong>，使得开发者可以在 <strong>Userspace</strong> 中便捷的开发各种 Network Applications，例如：基于 HTTP 协议的 <strong>Web 服务器</strong>、基于 SMTP 协议的<strong>邮件服务器</strong>、基于 FTP 协议的<strong>文件服务器</strong>等等。</p>
+<p>Linux Socket 网络编程框架主要由 3 大模块组成：</p>
+<ol>
+<li><strong>BSD Socket APIs</strong></li>
+<li><strong>Socket Abstraction Layer</strong></li>
+<li><strong>VFS Layer</strong></li>
+</ol>
+<!-- raw HTML omitted -->
+<h3 id="bsd-socket-apis-概览"><strong>BSD Socket APIs 概览</strong></h3>
+<p>BSD Socket APIs（Berkeley Software Distribution Socket APIs），是面向 Userspace Application 的接口封装层，提供了一套兼容绝大部分网络通信协议族的标准 Socket APIs。</p>
+<ul>
+<li><strong>socket()</strong>：创建一个新的 socket，返回一个 int 类型的 socket fd（File Descriptor，套接字<strong>文件描述符</strong>），用于后续的网络<strong>连接</strong>操作。</li>
+<li><strong>bind()</strong>：将 socket 与一个本地 IP:Port <strong>绑定</strong>，通常用于服务端，以便在本地监听网络连接。</li>
+<li><strong>connect()</strong>：建立与远程主机的连接，通常用于客户端，以便连接到远程服务器。</li>
+<li><strong>listen()</strong>：开始监听来自远程主机的连接请求，通常用于服务器端，等待来自客户端的连接请求。</li>
+<li><strong>accept()</strong>：接受一个连接请求，<strong>返回一个新的 socket fd</strong>，通常用于服务器端，用于接收客户端的连接请求。</li>
+<li><strong>send()</strong>：向 socket 发送数据。</li>
+<li><strong>recv()</strong>：从 socket 接收数据。</li>
+<li><strong>close()</strong>：关闭 socket 连接。</li>
+</ul>
+<p>Socket API 的使用通常可以分为以下几个步骤：</p>
+<ol>
+<li><strong>创建套接字</strong>：使用 socket() 函数创建一个新的 socket fd。</li>
+<li><strong>配置套接字</strong>：使用一些其他的 Socket API 函数，例如 bind()、connect() 和 listen() 来配置 socket，使其能够接收和发送数据。</li>
+<li><strong>数据传输</strong>：使用 send() 和 recv() 函数进行数据传输。</li>
+<li><strong>关闭套接字</strong>：使用 close() 函数关闭 socket 连接。</li>
+</ol>
+<p>需要注意的是，<strong>Socket API 并不是线程安全的</strong>，如果有多个线程同时使用了同一个 socket fd，则<strong>可能会导致数据传输错误或其他问题</strong>。为了避免这种情况，Application 需要进行适当的<strong>同步</strong>和<strong>数据处理</strong>。</p>
+<hr>
+<h3 id="socket-abstraction-layer"><strong>Socket Abstraction Layer</strong></h3>
+<p>Socket Abstraction Layer（Socket 抽象层），是 Socket API 的底层支撑，主要负责以下工作：</p>
+<ol>
+<li>
+<p>实现了 Socket File System（套接字文件系统），用于管理 User Process 和 socket fd 之间的关系，包括 socket fd 的创建、打开、读写等操作。</p>
+</li>
+<li>
+<p>实现了 Struct Socket、Struct Sock、Protocol Family（协议族）、Address Family（地址族）等<strong>数据结构</strong>。</p>
+</li>
+<li>
+<p>实现了 TCP/IP 协议栈，包括：TCP、UDP、ICMP 等协议。</p>
+</li>
+<li>
+<p>实现了 L4 传输层功能，处理传输层协议的连接建立、数据传输、连接维护等操作。</p>
+</li>
+</ol>
+<hr>
+<h4 id="socket--sock"><strong>Socket &amp; Sock</strong></h4>
+<!-- raw HTML omitted -->
+<ul>
+<li><strong>Struct Socket</strong> 是在 Socket Layer 中定义的数据结构，<strong>面向上层</strong> Socket API，包含了一个 Socket 所具有的各种属性，例如：状态、类型、标记、关联的 Sock 等。</li>
+<li><strong>Struct Sock</strong> 是在 Sock Layer 中定义的数据结构，<strong>面向底层协议栈实现</strong>，表示一个 Socket 对应的 <strong>PCB（Protocol Control Block，协议控制块）</strong>，即：与某种网络协议相关的一些信息和状态，例如：TCP PCB 就包括了 TCP <strong>连接状态</strong>、<strong>发送缓冲区</strong>、<strong>接收缓冲区</strong>、<strong>拥塞窗口</strong>等。</li>
+</ul>
+<p><strong>Socket Layer</strong> 与 <strong>Network Driver</strong>（网络设备驱动程序）之间通过 <strong>Socket Buffer（skb_buff）<strong>进行</strong>交互</strong>，当 Socket Layer 接收到 Application 的数据时，会<strong>将数据存储在 Socket Buffer</strong> 中，并将 Socket Buffer 传递给对应的 <strong>Sock Layer</strong> 进行处理。Struct Socket 和 Struct Sock 之间通过<strong>指针进行关联</strong>绑定，共同实现 Socket API 的功能。</p>
+<!-- raw HTML omitted -->
+<h5 id="socket-layer"><strong>Socket Layer</strong></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#f92672">/</span> linux<span style="color:#f92672">/</span>include<span style="color:#f92672">/</span>linux<span style="color:#f92672">/</span>net.h
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  struct socket - general BSD socket
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @state: socket state (%SS_CONNECTED, etc)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @type: socket type (%SOCK_STREAM, etc)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @flags: socket flags (%SOCK_NOSPACE, etc)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @ops: protocol specific socket operations
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @file: File back pointer for gc
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @sk: internal networking protocol agnostic socket representation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *  @wq: wait queue for several uses
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">struct</span> socket {
+</span></span><span style="display:flex;"><span> 	socket_state      state;
+</span></span><span style="display:flex;"><span> 	<span style="color:#66d9ef">short</span>           type;   <span style="color:#75715e">// 套接字类型，如 SOCK_STREAM、SOCK_DGRAM 等；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>      flags;  <span style="color:#75715e">// 套接字标志，如 O_NONBLOCK、O_ASYNC 等；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 	<span style="color:#66d9ef">struct</span> file          <span style="color:#f92672">*</span>file;  <span style="color:#75715e">// 套接字对应的文件结构体；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 	<span style="color:#66d9ef">struct</span> sock          <span style="color:#f92672">*</span>sk;    <span style="color:#75715e">// 指向套接字对应的 Sock 结构体；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> proto_ops <span style="color:#f92672">*</span>ops;   <span style="color:#75715e">// 套接字对应的操作函数集，如 inet_stream_ops、inet_dgram_ops 等；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 	<span style="color:#66d9ef">struct</span> socket_wq     wq;     <span style="color:#75715e">// 套接字等待队列；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">enum</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  SS_FREE<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;      <span style="color:#75715e">// 未分配
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  SS_UNCONNECTED;  <span style="color:#75715e">// 未连接到任何套接字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  SS_CONNECTING;  <span style="color:#75715e">// 处于连接过程中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  SS_CONNECTED;   <span style="color:#75715e">// 已经连接到另一个套接字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  SS_DISCONNECTING;     <span style="color:#75715e">// 处于断开连接过程中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>} socket_state;
+</span></span></code></pre></div><h5 id="sock-layer"><strong>Sock Layer</strong></h5>
+<p><strong>Struct Sock</strong> 包含了 Socket 的各种底层执行状态和操作信息，例如：<strong>接收和发送缓冲区</strong>、套接字<strong>队列</strong>、套接字<strong>协议信息</strong>等。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// linux/include/net/sock.h
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sock {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Socket family and type */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span>      family;  <span style="color:#75715e">// 协议族，如 AF_INET、AF_PACKET 等；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    __u16               type;    <span style="color:#75715e">// 套接字类型，如 SOCK_STREAM、SOCK_DGRAM 等；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>       flags;   <span style="color:#75715e">// 套接字标志，如 O_NONBLOCK、O_ASYNC 等；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Protocol specific elements of the socket */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> proto        <span style="color:#f92672">*</span>ops;      <span style="color:#75715e">// 协议特定操作函数集；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> net_device   <span style="color:#f92672">*</span>sk_net;   <span style="color:#75715e">// 套接字所在的网络设备；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Memory allocation cache */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">kmem_cache_t</span>        <span style="color:#f92672">*</span>sk_slab;  <span style="color:#75715e">// 套接字内存分配缓存；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Socket state */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">atomic_t</span>            refcnt;    <span style="color:#75715e">// 套接字引用计数；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> mutex        sk_lock;   <span style="color:#75715e">// 套接字锁，用于保护套接字状态的一致性；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Send and receive buffers */</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">struct</span> sk_buff_head sk_receive_queue;  <span style="color:#75715e">// 接收队列，保存了等待接收的数据包；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sk_buff_head sk_write_queue;    <span style="color:#75715e">// 发送队列，保存了等待发送的数据包；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sk_buff      <span style="color:#f92672">*</span>sk_send_head;     <span style="color:#75715e">// 发送缓冲区的头指针；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sk_buff      <span style="color:#f92672">*</span>sk_send_tail;     <span style="color:#75715e">// 发送缓冲区的尾指针；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Receive queue */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> sk_buff      <span style="color:#f92672">*</span>sk_receive_skb;   <span style="color:#75715e">// 当前正在接收的数据包；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Transport specific fields */</span>
+</span></span><span style="display:flex;"><span>    __u32           sk_priority;           <span style="color:#75715e">// 套接字优先级；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> dst_entry    <span style="color:#f92672">*</span>sk_dst_cache;     <span style="color:#75715e">// 缓存的目标设备；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> dst_entry    <span style="color:#f92672">*</span>sk_dst_pending_confirm;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> flowi        sk_fl;             <span style="color:#75715e">// Flowi 结构体，保存了套接字相关的流信息；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sk_filter    <span style="color:#f92672">*</span>sk_filter;        <span style="color:#75715e">// 过滤器；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sk_buff_head sk_async_wait_queue;  <span style="color:#75715e">// 异步等待队列；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Socket buffer allocations */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>       sk_wmem_alloc;  <span style="color:#75715e">// 发送缓冲区已分配的内存；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>       sk_omem_alloc;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* User and kernel buffers */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> socket_wq    <span style="color:#f92672">*</span>sk_wq;   <span style="color:#75715e">// 套接字等待队列；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> page_frag    sk_frag;  <span style="color:#75715e">// 内存分配器的页片段；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span>         sk_forward_alloc; <span style="color:#75715e">// 前向分配的字节数；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span>         sk_rxhash;        <span style="color:#75715e">// 套接字是否支持接收哈希。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><h4 id="protocol-family"><strong>Protocol Family</strong></h4>
+<p>Socket 支持广泛的 PFs，主要有以下 4 类：</p>
+<ol>
+<li><strong>PF_INETv4v6 sockets（IP Socket）</strong>：基于 IPv4v6 网络层协议，支持 TCP、UDP 传输层协议。</li>
+</ol>
+<ul>
+<li>SOCK_STREAM：TCP 字节流式传输。</li>
+<li>SOCK_DGRAM：UDP 数据包式传输。</li>
+<li>SOCK_RAW：原始套接字，可以处理 IPv4、ICMP、IGMP 等报文，常用于网络监听、检验新的协议或者访问新的设备。</li>
+</ul>
+<ol start="2">
+<li>
+<p><strong>PF_PACKET sockets（Packet Socket）</strong>：基于 Device Driver（设备驱动），支持对底层数据包的捕获和注入，常用于网络安全、网络监测等场景，例如：网络嗅探、协议分析、数据包过滤等。</p>
+</li>
+<li>
+<p><strong>PF_NETLINK sockets（Netlink Socket）</strong>：支持 Kernel Space 和 User Space 之间的通信，常用于网络管理和网络监测等场景，例如：获取内核中的网络信息、配置内核的网络参数、监控网络状态等。</p>
+</li>
+<li>
+<p><strong>PF_UNIX sockets（UNIX socket）</strong>：用于 Unix-like 系统中的多进程之间通信。</p>
+</li>
+</ol>
+<p>值得注意的是，虽然不同的协议族都使用了同一套 Socket API，但也可能会存在一些特有的函数或者数据结构，用于实现协议族特有的功能。例如：</p>
+<ul>
+<li>
+<p>PF_PACKET 协议族可以使用 <strong>pcap 库</strong>来进行网络数据包捕获和注入；</p>
+</li>
+<li>
+<p>PF_NETLINK 协议族可以使用 <strong>netlink 库</strong>来进行内核和用户空间之间的通信。</p>
+</li>
+</ul>
+<p>但是，这些特有的函数和数据结构通常不会影响套接字编程接口的基本使用方式和语法。</p>
+<!-- raw HTML omitted -->
+<h4 id="vfs-layer">VFS Layer</h4>
+<p>VFS Layer 属于 <strong>Linux VFS sub-system（虚拟文件子系统</strong>），提供了一组<strong>通用</strong>的 Linux File System Call APIs（<strong>SCI</strong>），使得 Application 可以使用相同的 API 来<strong>完成文件 I/O</strong>。</p>
+<p>当 Application 使用 Socket API 发送或接收数据时，Socket Abstraction Layer 会借助 VFS Layer 来完成 Socket File System 的管理。例如：</p>
+<ul>
+<li><strong>Application 调用 Socket API socket() 创建 socket 时</strong>：在 VFS I/O Layer 中，Socket FD 文件句柄被创建。</li>
+<li><strong>Application 调用 Socket API close() 关闭 socket 时</strong>：在 VFS I/O Layer 中，<strong>文件句柄</strong>被释放，并释放相关资源。</li>
+</ul>
+<h3 id="pf_inet-sockets"><strong>PF_INET sockets</strong></h3>
+<p>PF_INET sockets 基于 IPv4v6 网络层协议，支持 TCP、UDP 等传输层协议。是 Linux 网络编程中最常用到的协议族。</p>
+<!-- raw HTML omitted -->
+<hr>
+<h3 id="1创建套接字"><strong>1、创建套接字</strong></h3>
+<h4 id="socket"><strong>socket()</strong></h4>
+<p><strong>函数功能</strong>：创建一个新的套接字，返回一个 <strong>int 类型</strong>的套接字<strong>文件描述符</strong>（作为 Linux 文件操作的句柄），用于后续的网络连接操作。</p>
+<p><strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>af 参数</strong>：指定 Socket AF（<strong>Address Family</strong>，地址族），对于 PF_INETv4v6 sockets 而言，可选：</p>
+</li>
+<li>
+<ul>
+<li>AF_INET</li>
+<li>AF_INET6</li>
+</ul>
+</li>
+<li>
+<p><strong>type 参数</strong>：指定数据传输方式，可选：</p>
+</li>
+<li>
+<ul>
+<li>SOCK_STREAM（面向连接的 TCP）</li>
+<li>SOCK_DGRAM（无连接的 UDP）</li>
+<li>SOCK_RAW（原始 IP 数据包）</li>
+</ul>
+</li>
+<li>
+<p><strong>protocol</strong>：指定具体的传输层协议，可选：</p>
+</li>
+<li>
+<ul>
+<li>IPPROTO_TCP</li>
+<li>IPPTOTO_UDP</li>
+</ul>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回 Socket fd。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+<li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">socket</span>(<span style="color:#66d9ef">int</span> af, <span style="color:#66d9ef">int</span> type, <span style="color:#66d9ef">int</span> protocol);
+</span></span></code></pre></div></li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 创建 TCP 套接字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> tcp_socket <span style="color:#f92672">=</span> <span style="color:#a6e22e">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 创建 UDP 套接字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> udp_socket <span style="color:#f92672">=</span> <span style="color:#a6e22e">socket</span>(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+</span></span></code></pre></div><h4 id="setsockopt"><strong>setsockopt()</strong></h4>
+<p><strong>函数功能</strong>：用于设置 Socket 的选项值。</p>
+<p><strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>sockfd 参数</strong>：指定 socket fd。</p>
+</li>
+<li>
+<p><strong>level 参数</strong>：指定选项的<strong>协议层</strong>，可选 SOL_SOCKET、IPPROTO_TCP、IPPROTO_IP 等。</p>
+</li>
+<li>
+<p><strong>optname 参数</strong>：指定要设置的选项名。</p>
+</li>
+<li>
+<ul>
+<li><strong>SO_REUSEADDR</strong>：int 类型，表示<strong>重用 IP 地址</strong>。</li>
+<li><strong>SO_KEEPALIVE</strong>：int 类型，用于<strong>启用/禁用 Keepalive</strong>（保持连接）功能。</li>
+<li><strong>SO_LINGER</strong>：struct linger 类型，用于<strong>指定关闭套接字时的行为</strong>。</li>
+<li><strong>TCP_NODELAY</strong>：int 类型，用于禁用 <strong>Nagle 算法</strong>，从而实现数据的<strong>实时传输</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>optval 参数</strong>：指定存放选项值的缓冲区入口。</p>
+</li>
+<li>
+<p><strong>optlen 参数</strong>：指定选项值缓冲区的长度。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：0。</li>
+<li>失败：-1，并设置了 errno 错误码。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">setsockopt</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">int</span> level, <span style="color:#66d9ef">int</span> optname, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>optval, <span style="color:#66d9ef">socklen_t</span> optlen);
+</span></span></code></pre></div><h3 id="2配置套接字"><strong>2、配置套接字</strong></h3>
+<h2 id="bind"><strong>bind()</strong></h2>
+<p>将 Socket 与主机中的某个 IP:Port 绑定起来。</p>
+<p><strong>函数作用</strong>：将套接字与一个本地 IP:Port 绑定。通常用于服务端，以便在本地监听网络连接。<strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定 Server socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>addr 参数</strong>：指定 Server sockaddr 结构体变量，指针类型。</p>
+</li>
+<li>
+<p><strong>addrlen 参数</strong>：指定 addr 变量的大小，使用 sizeof() 计算得出。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">bind</span>(<span style="color:#66d9ef">int</span> sock, <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>addr, <span style="color:#66d9ef">socklen_t</span> addrlen); 
+</span></span></code></pre></div><p><strong>示例</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> tcp_socket <span style="color:#f92672">=</span> <span style="color:#a6e22e">socket</span>(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sockaddr_in tcp_socket_addr;                    <span style="color:#75715e">// 定义 Server Socket Address
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>tcp_socket_addr, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(tcp_socket_addr));  <span style="color:#75715e">// 初始化结构体内存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>tcp_socket_addr.sin_family <span style="color:#f92672">=</span> PF_INET;
+</span></span><span style="display:flex;"><span>tcp_socket_addr.sin_addr.s_addr <span style="color:#f92672">=</span> <span style="color:#a6e22e">inet_addr</span>(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>);  <span style="color:#75715e">// 定义本地 IP 地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>tcp_socket_addr.sin_port <span style="color:#f92672">=</span> <span style="color:#a6e22e">htons</span>(<span style="color:#ae81ff">1314</span>);                    <span style="color:#75715e">// 定义本地 Port
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bind</span>(tcp_socket, (sockaddr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>tcp_socket_addr, <span style="color:#66d9ef">sizeof</span>(sockaddr));  <span style="color:#75715e">// 绑定
+</span></span></span></code></pre></div><p>其中 sockaddr_in 结构类型的声明如下。使用时，需要先定义并初始化 sockaddr_in，然后再将它强制转化成 sockaddr 来使用。2 个结构体长度均为 16B，其中，sockaddr_in.sin_family 的 2B 存入 sockaddr.sa_family，剩下的 14B 存入 sockaddr.sa_data。</p>
+<p>这样做是为了在后续的各种操作中可以更方便的处理 IP 地址和 Port 号。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;arpa/inet.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> in_addr {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> a_addr;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sockaddr_in {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span>    sin_family;     <span style="color:#75715e">// 地址类型（2B）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">int</span>  sin_port;     <span style="color:#75715e">// 端口号（2B）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">struct</span> in_addr      sin_addr;    <span style="color:#75715e">// IP 地址（4B）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>       sin_zero[<span style="color:#ae81ff">8</span>];  <span style="color:#75715e">// 填充空间（8B）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sockaddr {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span>  sa_family; <span style="color:#75715e">// 地址类型（2B）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">char</span>            sa_data[<span style="color:#ae81ff">14</span>]; <span style="color:#75715e">// 协议地址（14B）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> }
+</span></span></code></pre></div><p>另外，IPv6 的结构体声明如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sockaddr_in6 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sa_family_t</span> sin6_family;    <span style="color:#75715e">// 地址类型，取值为 AF_INET6
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">in_port_t</span> sin6_port;        <span style="color:#75715e">// 16 位端口号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> sin6_flowinfo;     <span style="color:#75715e">// IPv6 流信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> in6_addr sin6_addr;  <span style="color:#75715e">// 具体的 IPv6 地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> sin6_scope_id;     <span style="color:#75715e">// 接口范围 ID
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p>如果 sock_addr.sin_port 赋值为 0，或者没有调用 bind()，而直接调用 listen()，那么 <strong>Kernel 会自动为 Socket 临时分配一个 Port</strong>。此时需要调用 getsockname() 来获取具体的端口信息。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">getsockname</span>(httpd, (<span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>name, <span style="color:#f92672">&amp;</span>namelen);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ntohs</span>(name.sin_port);
+</span></span></code></pre></div><h2 id="listen"><strong>listen()</strong></h2>
+<p><strong>函数作用</strong>：开始监听来自远程主机的连接请求。通常用于服务器端，在套接字上等待来自客户端的连接请求。</p>
+<p><strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定需要进入监听状态的 Server socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>backlog 参数</strong>：指定<strong>请求队列的最大长度</strong>，当队列满了之后，就不再接收请求。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">listen</span>(<span style="color:#66d9ef">int</span> sock, <span style="color:#66d9ef">int</span> backlog);
+</span></span></code></pre></div><h2 id="connect"><strong>connect()</strong></h2>
+<p><strong>函数作用</strong>：建立与远程主机的连接。通常用于客户端，以便连接到远程服务器。<strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定 Client socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>serv_addr 参数</strong>：指定 Server sockaddr 结构体变量，指针类型。</p>
+</li>
+<li>
+<p><strong>addrlen 参数</strong>：指定 addr 变量的大小，使用 sizeof() 计算得出。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">connect</span>(<span style="color:#66d9ef">int</span> sock, <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>serv_addr, <span style="color:#66d9ef">socklen_t</span> addrlen); 
+</span></span></code></pre></div><p><strong>示例</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> cli_socket <span style="color:#f92672">=</span> <span style="color:#a6e22e">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sockaddr_in server_sock_addr;                     <span style="color:#75715e">// 定义 Server Socket Address
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>server_sock_addr, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(server_sock_addr));  <span style="color:#75715e">// 初始化结构体内存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>server_sock_addr.sin_family <span style="color:#f92672">=</span> PF_INET;
+</span></span><span style="display:flex;"><span>server_sock_addr.sin_addr.s_addr <span style="color:#f92672">=</span> <span style="color:#a6e22e">inet_addr</span>(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>);  <span style="color:#75715e">// 定义本地 IP 地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>server_sock_addr.sin_port <span style="color:#f92672">=</span> <span style="color:#a6e22e">htons</span>(<span style="color:#ae81ff">1314</span>);                    <span style="color:#75715e">// 定义本地 Port
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">connect</span>(cli_socket, (sockaddr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>server_sock_addr, <span style="color:#66d9ef">sizeof</span>(sockaddr));
+</span></span></code></pre></div><h2 id="accept"><strong>accept()</strong></h2>
+<p><strong>函数作用</strong>：接受一个连接请求，返回一个新的、表示客户端的 Socket 文件描述符，作为服务端和客户端之间发送与接收操作的句柄。通常用于服务器端，用于接收客户端的连接请求。</p>
+<p><strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定 Server socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>addr 参数</strong>：指定 Client sockaddr 结构体变量，指针类型。</p>
+</li>
+<li>
+<p><strong>addrlen 参数</strong>：指定 addr 变量的大小，使用 sizeof() 计算得出。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回 Client socket fd。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">accept</span>(<span style="color:#66d9ef">int</span> sock, <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>addr, <span style="color:#66d9ef">socklen_t</span> <span style="color:#f92672">*</span>addrlen);
+</span></span></code></pre></div><p><strong>示例</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 返回一个新的套接字，用于后续的发送和接收
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> cli_socket <span style="color:#f92672">=</span> <span style="color:#a6e22e">accept</span>(server_socket, (sockeraddr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>cli_socket_addr, <span style="color:#f92672">&amp;</span>len);
+</span></span></code></pre></div><h2 id="getnameinfo"><strong>getnameinfo()</strong></h2>
+<p><strong>函数作用</strong>：用于将一个 Sock Addr 转换为对应的 Hostname 或 Service name，以便于记录日志或者显示给用户。</p>
+<p><strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>addr</strong>：表示需要转换的 Sock Addr；</p>
+</li>
+<li>
+<p><strong>addrlen</strong>：表示该 Socket addr址的长度；</p>
+</li>
+<li>
+<p><strong>host</strong>：输出 Hostname 的存储空间。</p>
+</li>
+<li>
+<p><strong>serv</strong>：输出 Service name 的存储空间。</p>
+</li>
+<li>
+<p><strong>hostlen</strong>：Hostname 存储空间的大小。</p>
+</li>
+<li>
+<p><strong>servlen</strong>：Service name 存储空间的大小。</p>
+</li>
+<li>
+<p><strong>flags</strong>：标志参数，通常设置为 0。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回 0。</li>
+<li>失败：返回非 0，并更新 errno 全局变量。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getnameinfo</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>addr, <span style="color:#66d9ef">socklen_t</span> addrlen,
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>host, <span style="color:#66d9ef">socklen_t</span> hostlen,
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>serv, <span style="color:#66d9ef">socklen_t</span> servlen, <span style="color:#66d9ef">int</span> flags);
+</span></span></code></pre></div><h3 id="3数据传输"><strong>3、数据传输</strong></h3>
+<h2 id="recv-和-send"><strong>recv() 和 send()</strong></h2>
+<p>recv() 和 send() 函数，用于在 TCP Socket 中进行数据读写，属于阻塞式 I/O（Blocking I/O）模式，即：如果没有可读数据或者对端的接收缓冲区已满，则函数将一直等待直到有数据可读或者对端缓冲区可写。</p>
+<p><strong>recv()</strong>：从套接字接收数据。</p>
+<ul>
+<li>
+<p><strong>sockfd 参数</strong>：指定要接收 TCP 数据的 Socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>buf 参数</strong>：指定接收数据缓冲区的入口地址。</p>
+</li>
+<li>
+<p><strong>len 参数</strong>：指定要接收的数据的 Byte 数目。</p>
+</li>
+<li>
+<p><strong>flags</strong>：指定接收数据时的选项，常设为 0。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回接收的字节数。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ssize_t</span> <span style="color:#a6e22e">recv</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>buf, <span style="color:#66d9ef">size_t</span> len, <span style="color:#66d9ef">int</span> flags);
+</span></span></code></pre></div><p><strong>send()</strong>：向套接字发送数据。</p>
+<ul>
+<li>
+<p><strong>sockfd 参数</strong>：指定要发送 TCP 数据的 Socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>buf 参数</strong>：指定发送数据缓冲区入的口地址。</p>
+</li>
+<li>
+<p><strong>len 参数</strong>：指定要发送数据的 Byte 数目。</p>
+</li>
+<li>
+<p><strong>flags 参数</strong>：指定发送数据时的选项，常设为 0。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回发送的字节数。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">ssize_t</span> <span style="color:#a6e22e">send</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>buf, <span style="color:#66d9ef">size_t</span> len, <span style="color:#66d9ef">int</span> flags);
+</span></span></code></pre></div><h2 id="recvfrom-和-sendto"><strong>recvfrom() 和 sendto()</strong></h2>
+<p>recvfrom() 和 sendto() 函数，用于在 UDP Socket 中进行数据读写以及获取对端地址。这两个函数在使用时需要指定对端的 IP:Port。</p>
+<p><strong>recvfrom()</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定要接收 UDP 数据的 Socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>buf 参数</strong>：指定接收数据缓冲区的入口地址。</p>
+</li>
+<li>
+<p><strong>nbytes 参数</strong>：指定要接收数据的 Byte 数目。</p>
+</li>
+<li>
+<p><strong>flags 参数</strong>：指定接收数据时的选项，常设为 0。</p>
+</li>
+<li>
+<p><strong>from 参数</strong>：指定源地址 sockaddr 结构体变量的地址。</p>
+</li>
+<li>
+<p><strong>addrlen 参数</strong>：指定 from 参数使用的长度，使用 sizeof() 获取。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回接收的字节数。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ssize_t</span> <span style="color:#a6e22e">recvfrom</span>(<span style="color:#66d9ef">int</span> sock, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>buf, <span style="color:#66d9ef">size_t</span> nbytes, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">struct</span> sockadr <span style="color:#f92672">*</span>from, <span style="color:#66d9ef">socklen_t</span> <span style="color:#f92672">*</span>addrlen);
+</span></span></code></pre></div><p><strong>sendto()</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定要发送 UDP 数据的 Socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>buf 参数</strong>：指定发送数据缓冲区的入口地址。</p>
+</li>
+<li>
+<p><strong>nbytes 参数</strong>：指定要发送数据的 Byte 数目。</p>
+</li>
+<li>
+<p><strong>flags 参数</strong>：指定发送数据时的选项，常设为 0。</p>
+</li>
+<li>
+<p><strong>to 参数</strong>：指定目标地址 sockaddr 结构体变量的地址。</p>
+</li>
+<li>
+<p><strong>addrlen 参数</strong>：指定 to 参数使用的长度，使用 sizeof() 获取。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回发送的字节数。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ssize_t</span> <span style="color:#a6e22e">sendto</span>(<span style="color:#66d9ef">int</span> sock, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>buf, <span style="color:#66d9ef">size_t</span> nbytes, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>to, <span style="color:#66d9ef">socklen_t</span> addrlen);
+</span></span></code></pre></div><h2 id="recvmsg-和-sendmsg"><strong>recvmsg() 和 sendmsg()</strong></h2>
+<p>recvmsg() 和 sendmsg() 函数，用于在 TCP 和 UDP Socket 中进行数据读写，不仅可以读写数据，还可以读写对端地址、辅助数据等信息。</p>
+<p><strong>recvmsg()</strong>：</p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定要接收 TCP 或 UDP 数据的 Socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>msg 参数</strong>：指示将接收的数据存储到 msghdr 结构体中。</p>
+</li>
+<li>
+<p><strong>flags 参数</strong>：支持函数的行为，可选 0 或者 MSG_DONTWAIT 等标志位。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回接收的字节数。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ssize_t</span> <span style="color:#a6e22e">sendmsg</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> msghdr <span style="color:#f92672">*</span>msg, <span style="color:#66d9ef">int</span> flags);
+</span></span></code></pre></div><p><strong>sendmsg()</strong></p>
+<ul>
+<li>
+<p><strong>sock 参数</strong>：指定要发送 TCP 或 UDP 数据的 Socket 文件描述符。</p>
+</li>
+<li>
+<p><strong>msg 参数</strong>：指示 msghdr 结构体中包含了要发送的数据、数据长度等信息。</p>
+</li>
+<li>
+<p><strong>flags 参数</strong>：支持函数的行为，可选 0 或者 MSG_DONTWAIT 等标志位。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>成功：返回发送的字节数。</li>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ssize_t</span> <span style="color:#a6e22e">sendmsg</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> msghdr <span style="color:#f92672">*</span>msg, <span style="color:#66d9ef">int</span> flags);
+</span></span></code></pre></div><p><strong>msghdr 结构体定义如下</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> msghdr {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 指定接收或发送数据的对端地址，可以为 NULL 或 0，表示不需要使用对端地址。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span>         <span style="color:#f92672">*</span>msg_name;       <span style="color:#75715e">/* optional address */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">socklen_t</span>     msg_namelen;    <span style="color:#75715e">/* size of address */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 指定接收或发送数据的缓冲区和缓冲区大小，可以使用多个缓冲区同时接收或发送数据。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> iovec <span style="color:#f92672">*</span>msg_iov;        <span style="color:#75715e">/* scatter/gather array */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span>        msg_iovlen;     <span style="color:#75715e">/* # elements in msg_iov */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">/* 指定一些附加的控制信息，可以为 NULL 或 0。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span>         <span style="color:#f92672">*</span>msg_control;    <span style="color:#75715e">/* ancillary data, see below */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span>        msg_controllen; <span style="color:#75715e">/* ancillary data buffer len */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">/* 指定函数的行为，例如是否需要接收带外数据等。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span>           msg_flags;      <span style="color:#75715e">/* flags on received message */</span>
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h2 id="flags-参数类型"><strong>flags 参数类型</strong></h2>
+<ul>
+<li><strong>MSG_PEEK</strong>：允许从接收队列中查看数据而不将其删除。这意味着，如果接收队列中有数据，recv() 函数将返回数据的一个副本，但是该数据仍将留在接收队列中。这对于查看接收队列中的数据而不实际处理它们非常有用。此外，使用 MSG_PEEK 选项，我们可以检查套接字缓冲区中是否有足够的数据可供读取，以便稍后调用 recv() 函数。</li>
+<li><strong>MSG_WAITALL</strong>：如果套接字缓冲区中没有足够的数据，则 recv() 函数将一直等待，直到收到请求的数据量。</li>
+<li><strong>MSG_DONTWAIT</strong>：指定此标志后，recv() 函数将立即返回，即使没有收到数据也不会阻塞。如果没有数据可用，则 recv() 将返回 -1，并将 errno 设置为 EAGAIN 或 EWOULDBLOCK。</li>
+<li><strong>MSG_OOB</strong>：用于处理带外数据，即紧急数据。带外数据不遵循正常的传输控制协议（如 TCP），可以使用此标志将其标记为紧急数据并将其与其他数据分开处理。</li>
+<li><strong>MSG_TRUNC</strong>：如果接收缓冲区中的数据比接收缓冲区长度长，则截断数据并返回。</li>
+<li><strong>MSG_CTRUNC</strong>：如果接收缓冲区中的控制消息（例如带外数据或错误消息）比接收缓冲区长度长，则截断消息并返回。</li>
+</ul>
+<h3 id="4关闭套接字"><strong>4、关闭套接字</strong></h3>
+<h2 id="close"><strong>close()</strong></h2>
+<p><strong>函数作用</strong>：关闭套接字连接。<strong>函数原型</strong>：</p>
+<ul>
+<li>
+<p><strong>fd</strong>：指定要关闭的 Socket 的文件描述符。</p>
+</li>
+<li>
+<p><strong>函数返回值</strong>：</p>
+</li>
+<li>
+<ul>
+<li>失败：返回 -1。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">close</span>(<span style="color:#66d9ef">int</span> fd);
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<h3 id="服务端"><strong>服务端</strong></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;errno.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;arpa/inet.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define ERR_MSG(err_code) do {                                     \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    err_code = errno;                                              \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    fprintf(stderr, &#34;ERROR code: %d \n&#34;, err_code);                \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    perror(&#34;PERROR message&#34;);                                      \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">} while (0)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BUF_LEN <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 配置 Server Sock 信息。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> sockaddr_in srv_sock_addr;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>srv_sock_addr, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(srv_sock_addr));
+</span></span><span style="display:flex;"><span>    srv_sock_addr.sin_family <span style="color:#f92672">=</span> AF_INET;
+</span></span><span style="display:flex;"><span>    srv_sock_addr.sin_addr.s_addr <span style="color:#f92672">=</span> <span style="color:#a6e22e">htonl</span>(INADDR_ANY);  <span style="color:#75715e">// 即 0.0.0.0 表示监听本机所有的 IP 地址。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    srv_sock_addr.sin_port <span style="color:#f92672">=</span> <span style="color:#a6e22e">htons</span>(<span style="color:#ae81ff">6666</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 创建 Server Socket。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> srv_socket_fd <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> (srv_socket_fd <span style="color:#f92672">=</span> <span style="color:#a6e22e">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP))) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Create socket file descriptor ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 设置 Server Socket 选项。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> optval <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">setsockopt</span>(srv_socket_fd,
+</span></span><span style="display:flex;"><span>                   SOL_SOCKET,    <span style="color:#75715e">// 表示套接字选项的协议层。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                   SO_REUSEADDR,  <span style="color:#75715e">// 表示在绑定地址时允许重用本地地址。这样做的好处是，当服务器进程崩溃或被关闭时，可以更快地重新启动服务器，而不必等待一段时间来释放之前使用的套接字。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                   <span style="color:#f92672">&amp;</span>optval,
+</span></span><span style="display:flex;"><span>                   <span style="color:#66d9ef">sizeof</span>(optval)) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Set socket options ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 绑定 Socket 与 Sock Address 信息。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">bind</span>(srv_socket_fd,
+</span></span><span style="display:flex;"><span>                   (<span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>srv_sock_addr,
+</span></span><span style="display:flex;"><span>                   <span style="color:#66d9ef">sizeof</span>(srv_sock_addr)))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Bind socket ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 开始监听 Client 发出的连接请求。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">listen</span>(srv_socket_fd, <span style="color:#ae81ff">10</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Listen socket ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 初始化 Client Sock 信息存储变量。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> sockaddr cli_sock_addr;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>cli_sock_addr, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(cli_sock_addr));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> cli_sockaddr_len <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(cli_sock_addr);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> cli_socket_fd <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> recv_len <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buff[BUF_LEN] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 永远接受 Client 的连接请求。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> (cli_socket_fd <span style="color:#f92672">=</span> <span style="color:#a6e22e">accept</span>(srv_socket_fd,
+</span></span><span style="display:flex;"><span>                                          (<span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>)(<span style="color:#f92672">&amp;</span>cli_sock_addr),  <span style="color:#75715e">// 填充 Client Sock 信息。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                                          (<span style="color:#66d9ef">socklen_t</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>cli_sockaddr_len)))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Accept connection from client ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 接收指定 Client Socket 发出的数据，*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((recv_len <span style="color:#f92672">=</span> <span style="color:#a6e22e">recv</span>(cli_socket_fd, buff, BUF_LEN, <span style="color:#ae81ff">0</span>)) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Receive from client ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Recevice data from client: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buff);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 将收到的数据重新发送给指定的 Client Socket。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">send</span>(cli_socket_fd, buff, recv_len, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Send data to client: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buff);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 每处理完一次 Client 请求，即关闭连接。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">close</span>(cli_socket_fd);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">memset</span>(buff, <span style="color:#ae81ff">0</span>, BUF_LEN);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">close</span>(srv_socket_fd);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EXIT_SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="客户端"><strong>客户端</strong></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;errno.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;arpa/inet.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define ERR_MSG(err_code) do {                                     \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    err_code = errno;                                              \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    fprintf(stderr, &#34;ERROR code: %d \n&#34;, err_code);                \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    perror(&#34;PERROR message&#34;);                                      \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">} while (0)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BUF_LEN <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 配置 Server Sock 信息。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> sockaddr_in srv_sock_addr;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>srv_sock_addr, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(srv_sock_addr));
+</span></span><span style="display:flex;"><span>    srv_sock_addr.sin_family <span style="color:#f92672">=</span> AF_INET;
+</span></span><span style="display:flex;"><span>    srv_sock_addr.sin_addr.s_addr <span style="color:#f92672">=</span> <span style="color:#a6e22e">inet_addr</span>(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>);
+</span></span><span style="display:flex;"><span>    srv_sock_addr.sin_port <span style="color:#f92672">=</span> <span style="color:#a6e22e">htons</span>(<span style="color:#ae81ff">6666</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> cli_socket_fd <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> send_buff[BUF_LEN];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> recv_buff[BUF_LEN];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 永循环从终端接收输入，并发送到 Server。*/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 创建 Client Socket。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> (cli_socket_fd <span style="color:#f92672">=</span> <span style="color:#a6e22e">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP)))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Create socket ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 连接到 Server Sock 信息指定的 Server。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">connect</span>(cli_socket_fd,
+</span></span><span style="display:flex;"><span>                          (<span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>srv_sock_addr,
+</span></span><span style="display:flex;"><span>                          <span style="color:#66d9ef">sizeof</span>(srv_sock_addr)))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Connect to server ERROR.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ERR_MSG</span>(errno);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">exit</span>(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 从 stdin 接收输入，再发送到建立连接的 Server Socket。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fputs</span>(<span style="color:#e6db74">&#34;Send to server&gt; &#34;</span>, stdout);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fgets</span>(send_buff, BUF_LEN, stdin);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">send</span>(cli_socket_fd, send_buff, BUF_LEN, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">memset</span>(send_buff, <span style="color:#ae81ff">0</span>, BUF_LEN);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 从建立连接的 Server 接收数据。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recv</span>(cli_socket_fd, recv_buff, BUF_LEN, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Recevice from server: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, recv_buff);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">memset</span>(recv_buff, <span style="color:#ae81ff">0</span>, BUF_LEN);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 每次 Client 请求和响应完成后，关闭连接。*/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">close</span>(cli_socket_fd);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EXIT_SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="测试"><strong>测试</strong></h4>
+<p>编译：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ gcc -g -std<span style="color:#f92672">=</span>c99 -Wall tcp_server.c -o tcp_server
+</span></span><span style="display:flex;"><span>$ gcc -g -std<span style="color:#f92672">=</span>c99 -Wall tcp_client.c -o tcp_client
+</span></span></code></pre></div><p>运行：</p>
+<ol>
+<li>先启动 TCP Server：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>$ ./tcp_server
+</span></span></code></pre></div><ol start="2">
+<li>
+<p>查看监听 Socket 是否绑定成功：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ netstat -lpntu | grep <span style="color:#ae81ff">6666</span>
+</span></span><span style="display:flex;"><span>tcp        <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span> 0.0.0.0:6666            0.0.0.0:*               LISTEN      28675/./tcp_server
+</span></span></code></pre></div></li>
+<li>
+<p>启动 TCP Client</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ./tcp_client
+</span></span></code></pre></div></article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='http://localhost:1313/js/toc.js'></script>
+<link rel="stylesheet" href='http://localhost:1313/css/toc.css' />
+
+
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="http://localhost:1313/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+</body>
+
+<script type="application/javascript" src="http://localhost:1313/js/github-style.js"></script>
+
+
+
+
+</html>
