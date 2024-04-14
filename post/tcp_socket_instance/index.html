@@ -145,9 +145,9 @@
 
                   
                   <span class="file-info-divider"></span>
-                  Modified <relative-time datetime="Thu, 11 Apr 2024 00:09:33 &#43;0800"
+                  Modified <relative-time datetime="Sun, 14 Apr 2024 10:05:13 &#43;0800"
                     class="no-wrap">
-                    Thu, 11 Apr 2024 00:09:33 &#43;0800</relative-time>
+                    Sun, 14 Apr 2024 10:05:13 &#43;0800</relative-time>
                   
                 </div>
               </div>
@@ -200,6 +200,7 @@
 <li><strong>VFS Layer</strong></li>
 </ol>
 <!-- raw HTML omitted -->
+<p><img src="/img/TCP_Socket_inst/Socket_framework.webp" alt="img1"></p>
 <h3 id="bsd-socket-apis-概览"><strong>BSD Socket APIs 概览</strong></h3>
 <p>BSD Socket APIs（Berkeley Software Distribution Socket APIs），是面向 Userspace Application 的接口封装层，提供了一套兼容绝大部分网络通信协议族的标准 Socket APIs。</p>
 <ul>
@@ -239,15 +240,14 @@
 </ol>
 <hr>
 <h4 id="socket--sock"><strong>Socket &amp; Sock</strong></h4>
-<!-- raw HTML omitted -->
 <p><img src="/img/TCP_Socket_inst/socket_struct.webp" alt="socket_struct"></p>
-<p><img src="/img/socket_struct.jpg" alt="socket_struct"></p>
 <ul>
 <li><strong>Struct Socket</strong> 是在 Socket Layer 中定义的数据结构，<strong>面向上层</strong> Socket API，包含了一个 Socket 所具有的各种属性，例如：状态、类型、标记、关联的 Sock 等。</li>
 <li><strong>Struct Sock</strong> 是在 Sock Layer 中定义的数据结构，<strong>面向底层协议栈实现</strong>，表示一个 Socket 对应的 <strong>PCB（Protocol Control Block，协议控制块）</strong>，即：与某种网络协议相关的一些信息和状态，例如：TCP PCB 就包括了 TCP <strong>连接状态</strong>、<strong>发送缓冲区</strong>、<strong>接收缓冲区</strong>、<strong>拥塞窗口</strong>等。</li>
 </ul>
 <p><strong>Socket Layer</strong> 与 <strong>Network Driver</strong>（网络设备驱动程序）之间通过 <strong>Socket Buffer（skb_buff）<strong>进行</strong>交互</strong>，当 Socket Layer 接收到 Application 的数据时，会<strong>将数据存储在 Socket Buffer</strong> 中，并将 Socket Buffer 传递给对应的 <strong>Sock Layer</strong> 进行处理。Struct Socket 和 Struct Sock 之间通过<strong>指针进行关联</strong>绑定，共同实现 Socket API 的功能。</p>
 <!-- raw HTML omitted -->
+<p><img src="/img/TCP_Socket_inst/application_socket_sock_network_driver.webp" alt="img2"></p>
 <h5 id="socket-layer"><strong>Socket Layer</strong></h5>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#f92672">/</span> linux<span style="color:#f92672">/</span>include<span style="color:#f92672">/</span>linux<span style="color:#f92672">/</span>net.h
 </span></span><span style="display:flex;"><span>
@@ -360,6 +360,7 @@
 </ul>
 <p>但是，这些特有的函数和数据结构通常不会影响套接字编程接口的基本使用方式和语法。</p>
 <!-- raw HTML omitted -->
+<p><img src="/img/TCP_Socket_inst/BSD_sockets_Network_device.webp" alt="img3"></p>
 <h4 id="vfs-layer">VFS Layer</h4>
 <p>VFS Layer 属于 <strong>Linux VFS sub-system（虚拟文件子系统</strong>），提供了一组<strong>通用</strong>的 Linux File System Call APIs（<strong>SCI</strong>），使得 Application 可以使用相同的 API 来<strong>完成文件 I/O</strong>。</p>
 <p>当 Application 使用 Socket API 发送或接收数据时，Socket Abstraction Layer 会借助 VFS Layer 来完成 Socket File System 的管理。例如：</p>
@@ -369,8 +370,7 @@
 </ul>
 <h3 id="pf_inet-sockets"><strong>PF_INET sockets</strong></h3>
 <p>PF_INET sockets 基于 IPv4v6 网络层协议，支持 TCP、UDP 等传输层协议。是 Linux 网络编程中最常用到的协议族。</p>
-<!-- raw HTML omitted -->
-<hr>
+<p><img src="/img/TCP_Socket_inst/PF_INET_sockets.webp" alt="img4"></p>
 <h3 id="1创建套接字"><strong>1、创建套接字</strong></h3>
 <h4 id="socket"><strong>socket()</strong></h4>
 <p><strong>函数功能</strong>：创建一个新的套接字，返回一个 <strong>int 类型</strong>的套接字<strong>文件描述符</strong>（作为 Linux 文件操作的句柄），用于后续的网络连接操作。</p>
@@ -877,6 +877,7 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">close</span>(<span style="color:#66d9ef">int</span> fd);
 </span></span></code></pre></div><!-- raw HTML omitted -->
+<p><img src="/img/TCP_Socket_inst/socket%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E7%A8%8B%E7%A4%BA%E4%BE%8B.webp" alt=""></p>
 <h3 id="服务端"><strong>服务端</strong></h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
