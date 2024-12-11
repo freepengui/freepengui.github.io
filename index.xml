@@ -2,45 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>freepengui&#39;s Blog</title>
-    <link>http://localhost:1313/</link>
+    <link>https://freepengui.github.io/</link>
     <description>Recent content on freepengui&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 29 May 2024 10:50:24 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Leetcode 算法 买卖股票最佳时机</title>
-      <link>http://localhost:1313/post/leetcode_stocks/</link>
-      <pubDate>Wed, 10 Apr 2024 19:40:35 +0800</pubDate>
-      <guid>http://localhost:1313/post/leetcode_stocks/</guid>
-      <description>&lt;p&gt;力扣 121：买卖股票&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Latex_test</title>
-      <link>http://localhost:1313/post/latex_test/</link>
-      <pubDate>Tue, 09 Apr 2024 21:50:20 +0800</pubDate>
-      <guid>http://localhost:1313/post/latex_test/</guid>
-      <description>Latex Test&#xA;display inline \( \int_{a}^{b} x^2 dx \)&#xA;display block $$ \int_{a}^{b} x^2 dx $$&#xA;$$ ([r^{(1)}]_t,&amp;hellip;,[r^{(t+1)}]_t)^T=M ([s^{(1)}]_t,&amp;hellip;, [s^{(n)}]_t)^T $$&#xA;$$ ([r^{(1)}]{2t}, &amp;hellip;,[r^{(t+1)}]_{2t})^T=M([s^{(1)}]{2t},&amp;hellip;,[s^{(n)}]_{2t})^T $$&#xA;$$([r^{(1)}]{2t},&amp;hellip;,[r^{(t+1)}]{2t})^T=M$$</description>
-    </item>
-    <item>
-      <title>TCP Socket 网络编程实例</title>
-      <link>http://localhost:1313/post/tcp_socket_instance/</link>
-      <pubDate>Tue, 09 Apr 2024 20:53:51 +0800</pubDate>
-      <guid>http://localhost:1313/post/tcp_socket_instance/</guid>
-      <description>&lt;h2 id=&#34;linux-socket-网络框架与编程示例&#34;&gt;linux: Socket 网络框架与编程示例&lt;/h2&gt;&#xA;&lt;h3 id=&#34;socket-网络编程框架&#34;&gt;Socket 网络编程框架&lt;/h3&gt;&#xA;&lt;p&gt;Socket(套接字)是一个网络编程概念，描述了一个通信端点（Endpoint），用于建立网络连接（Connection）并传输数据。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Linux 目录结构</title>
-      <link>http://localhost:1313/post/linux_directories/</link>
-      <pubDate>Tue, 09 Apr 2024 18:07:42 +0800</pubDate>
-      <guid>http://localhost:1313/post/linux_directories/</guid>
-      <description>&lt;p&gt;Linux 常用目录介绍&lt;/p&gt;</description>
-    </item>
+    <lastBuildDate>Tue, 09 Apr 2024 18:04:31 +0800</lastBuildDate>
+    <atom:link href="https://freepengui.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>http://localhost:1313/readme/</link>
+      <link>https://freepengui.github.io/readme/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/readme/</guid>
+      <guid>https://freepengui.github.io/readme/</guid>
       <description>Hello World!</description>
     </item>
   </channel>
